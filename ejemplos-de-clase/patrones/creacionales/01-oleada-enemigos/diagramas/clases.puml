@@ -1,0 +1,39 @@
+@startuml
+
+title 01 - Oleada de Enemigos
+
+abstract class Nivel {
+    - nombre: string
+
+    + getNombre(): string
+    + iniciarOleada(cantidad: number): Enemigo[]
+    # abstract crearEnemigo(): Enemigo
+}
+
+abstract class Enemigo {
+    - nombre: string
+    - vidaActual: number
+    - fuerzaAtaque: number
+
+    + atacar()
+    + recibirDanio(cantidad: number)
+}
+
+class Bosque {}
+class Desierto {}
+
+class Lobo {}
+class Escorpion {}
+
+
+' relaciones
+Nivel <|-- Bosque
+Nivel <|-- Desierto
+
+Enemigo <|-- Lobo
+Enemigo <|-- Escorpion
+
+Nivel .r.> Enemigo
+
+
+@enduml

@@ -1,0 +1,104 @@
+@startuml
+
+title 01 - Civilizaciones
+
+
+interface Objetivo {
+    + recibirDaño()
+}
+
+class Ejercito {
+    - soldados: Soldado[]
+    - arqueros: Arquero[]
+    - cuartel: Cuartel[]
+
+    + obtenerPrimerArquero(): Arquero
+    + obtenerPrimerSoldado(): Soldado
+}
+
+class Jugador {
+    - nombre: string
+    - civilizacionFactory: CivilizacionFactory
+    - ejercito: Ejercito
+
+    + constructor(c: CivilizacionFactory) 
+    + mostrarEjercito()
+    + getEjercito(): Ejercito
+    + atacar(a: Arquero, o: Objetivo)
+    # construirEjercito()
+}
+
+class Partida {
+    - jugador1: Jugador
+    - jugador2: Jugador
+
+    + constructor(j1: Jugador, j2: Jugador)
+    + mostrarEjercitos()
+    + ataqueInicial()
+}
+
+interface CivilizacionFactory {
+    + crearSoldado(): Soldado
+    + crearArquero(): Arquero
+    + crearCuartel(): Cuartel
+}
+
+interface Soldado {
+    + atacar()
+}
+interface Arquero {
+    + dispararA(o: Objetivo)
+}
+interface Cuartel {
+    + describir()
+}
+
+class ElfoFactory {}
+class SoldadoElfo {}
+class ArqueroElfo {}
+class CuartelElfo {}
+
+class OrcoFactory {}
+class SoldadoOrco {}
+class ArqueroOrco {}
+class CuartelOrco {}
+
+
+' relaciones
+CivilizacionFactory <|.u. ElfoFactory
+CivilizacionFactory <|.d. OrcoFactory
+
+Soldado <|.u. SoldadoElfo
+Soldado <|.d. SoldadoOrco
+Objetivo <|.. SoldadoElfo
+Objetivo <|.. SoldadoOrco
+
+Arquero <|.u. ArqueroElfo
+Arquero <|.d. ArqueroOrco
+Objetivo <|.. ArqueroElfo
+Objetivo <|.. ArqueroOrco
+
+Cuartel <|.u. CuartelElfo
+Cuartel <|.d. CuartelOrco
+Objetivo <|.. CuartelElfo
+Objetivo <|.. CuartelOrco
+
+Partida *-- Jugador
+Jugador *-- Ejercito
+Jugador *-l- CivilizacionFactory
+
+' notas
+note right of Partida::ataqueInicial
+    const e1 = jugador1.getEjercito()
+    const e2 = jugador2.getEjercito()
+
+    jugador1.atacar(
+        e1.getPrimerArquero(), 
+        e2.getPrimerSoldado()
+    )
+end note
+
+note right of Jugador::atacar
+    a.dispararA(o)
+end note
+@enduml
